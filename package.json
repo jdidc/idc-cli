@@ -1,0 +1,21 @@
+{
+  "name": "idc-cli",
+  "version": "1.0.0",
+  "description": "cli create directory",
+  "main": "index.js",
+  "scripts": {
+    "//": "这里的no表示 create order"
+  },
+  "author": "lcf33123@foxmail.com",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^2.4.1",
+    "commander": "^2.16.0",
+    "ejs": "^2.6.1",
+    "fs-extra": "^7.0.0",
+    "inquirer": "^6.0.0"
+  },
+  "bin": {
+    "idc": "bin/idc.js"
+  }
+}
