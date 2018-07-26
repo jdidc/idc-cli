@@ -51,3 +51,16 @@ Usage: idc [options] [command]
 
 - ```idc ai```或者```idc autoImport```，
 根据提示输驼峰形式的工单类型即可创建成功，import信息会自动写入 stepCommon中。
+
+## update
+
+如果idc-cli版本升级了，需要更新本地已经安装的idc-cli，通过命令```npm update idc-cli -g```即可更新到最新版。
+
+**如果这样不能够成功，可以尝试卸载idc-cli，再重新安装**
+```js
+// 卸载
+npm uninstall -g idc-cli
+
+// 安装
+npm i idc-cli -g
+```
