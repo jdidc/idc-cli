@@ -1,8 +1,21 @@
 const inquirer = require('inquirer');
 const chalk = require('chalk');
 const fse = require('fs-extra');
-const path = require('path');
 const ejs = require('ejs');
+
+const { autoWriteImportInfo, listAllOrder } = require('./utils');
+
+const {
+    SRC_VIEWS,
+    SRC_VIEWS_ORDER,
+    SRC_STEP_COMMON_DIR,
+    SRC_ORDER_TYPE_LSIT,
+
+    TEMPLATE_DIR,
+    TEMPLATE_ORDER,
+    TEMPLATE_STEP_COMMON_DIR,
+    TEMPLATE_OP_FAULT,
+} = require('./config');
 
 const question = [
     {
@@ -10,11 +23,16 @@ const question = [
         name: 'type',
         message: '工单的类型名字（驼峰形式）',
     },
+    {
+        type: 'input',
+        name: 'step',
+        message: '当前创建工单的步骤（4/5，默认5）',
+    },
 ];
 
 function copyFile(type) {
     // process.cwd() 表示进程的当前目录（绝对路径）
-    let dir = `${process.cwd()}/src/views/unifiedOrder/typeList/${type}`;
+    let dir = `${SRC_ORDER_TYPE_LSIT}/${type}`;
     if (fse.pathExistsSync(dir)) {
         console.log(chalk.red(`${type} 类型已经存在，请重试！`));
         process.exit();
@@ -29,44 +47,35 @@ function ejs2Vue(src, dest, anwsers) {
     fse.outputFileSync(dest, html);
 }
 
-// 自动写入import信息
-function autoWriteImportInfo() {
-    let typeDir = `${process.cwd()}/src/views/unifiedOrder/typeList`;
-    let allType = fse.readdirSync(typeDir);
-
-    let templateDir = path.resolve(__dirname + '/../template/unifiedOrder/stepCommon');
-    let src = `${process.cwd()}/src/views/unifiedOrder/stepCommon`;
-    for (let i = 2; i <= 5; i++) {
-        const srcFile = `${templateDir}/step${i}.vue`;
-        const destFile = `${src}/step${i}.vue`;
-        const content = fse.readFileSync(srcFile).toString();
-        const html = ejs.render(content, {typeList: allType});
-        fse.outputFileSync(destFile, html);
-    }
-}
-
 module.exports = () => {
     inquirer.prompt(question).then(function(anwsers) {
         copyFile(anwsers.type);
 
-        let dir = path.resolve(__dirname + '/../template/unifiedOrder/opFault');
-        let dest = `${process.cwd()}/src/views/unifiedOrder/typeList/${
-            anwsers.type
-        }`;
-        let files = fse.readdirSync(dir);
+        let files = fse.readdirSync(TEMPLATE_OP_FAULT);
 
         files.forEach(itemFileName => {
-            let file = `${dir}/${itemFileName}`;
+            let file = `${TEMPLATE_OP_FAULT}/${itemFileName}`;
             let newName = itemFileName.replace('opFault', anwsers.type);
-            let toFile = `${dest}/${newName}`;
+            let toFile = `${SRC_ORDER_TYPE_LSIT}/${anwsers.type}/${newName}`;
             ejs2Vue(file, toFile, anwsers);
         });
 
-        console.log(chalk.green(`${anwsers.type} 类型工单创建成功！`));
+        if (anwsers.step === '4') {
+            let file = `${SRC_ORDER_TYPE_LSIT}/${anwsers.type}/${
+                anwsers.type
+            }Step2.vue`;
 
-        console.log(chalk.yellow(`开始自动信息注入……`));
+            if (fse.pathExistsSync(file)) {
+                console.log('文件存在');
+                fse.removeSync(file);
+            }
+        }
+
+        console.log(chalk.green(`${anwsers.type} 类型工单创建成功！\n`));
+
         autoWriteImportInfo();
-        console.log(chalk.green(`注入完成！`));
+
+        listAllOrder();
 
         process.exit();
     });

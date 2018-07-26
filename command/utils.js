@@ -1,15 +1,67 @@
-// 自动写入import信息
-module.exports.autoWriteImportInfo = function (){
-    let typeDir = `${process.cwd()}/src/views/unifiedOrder/typeList`;
-    let allType = fse.readdirSync(typeDir);
-    console.log(allType);
-    // process.exit();
-    let src = `${process.cwd()}/src/views/unifiedOrder/stepCommon`;
-    for (let i = 2; i <= 2; i++) {
-        const file = `${src}/step${i}.vue`;
-        const content = fse.readFileSync(file).toString();
-        const html = ejs.render(content, {typeList: allType});
-        fse.outputFileSync(file, html);
-        console.log(html)
-    }
-}
+const fse = require('fs-extra');
+const ejs = require('ejs');
+const chalk = require('chalk');
+
+const {
+    SRC_ORDER_TYPE_LSIT,
+    SRC_STEP_COMMON_DIR,
+    TEMPLATE_STEP_COMMON_DIR,
+} = require('./config');
+
+module.exports = {
+    // 自动写入import信息
+    autoWriteImportInfo() {
+        console.log(chalk.yellow(`开始自动信息注入……`));
+        let allType = fse.readdirSync(SRC_ORDER_TYPE_LSIT);
+
+        // 每个步骤的含有的类型
+        let stepType = {
+            step2: [],
+            step3: [],
+            step4: [],
+            step5: [],
+        };
+
+        allType.forEach(itemType => {
+            for (let i = 2; i <= 5; i++) {
+                // 如果类型不存在，则不写入到类型中
+                if (
+                    fse.pathExistsSync(
+                        `${SRC_ORDER_TYPE_LSIT}/${itemType}/${itemType}Step${i}.vue`,
+                    )
+                ) {
+                    stepType[`step${i}`].push(itemType);
+                }
+            }
+        });
+
+        for (let i = 2; i <= 5; i++) {
+            const srcFile = `${TEMPLATE_STEP_COMMON_DIR}/step${i}.vue`;
+            const destFile = `${SRC_STEP_COMMON_DIR}/step${i}.vue`;
+            const content = fse.readFileSync(srcFile).toString();
+            const html = ejs.render(content, {
+                typeList: stepType[`step${i}`],
+            });
+            fse.outputFileSync(destFile, html);
+        }
+
+        console.log(chalk.green(`注入完成！\n`));
+    },
+
+    // 展示所有工单
+    listAllOrder() {
+        console.log(chalk.gray(`工单查询……`));
+
+        let files = fse.readdirSync(SRC_ORDER_TYPE_LSIT);
+        if (files.length === 0) {
+            console.log(chalk.yellow('当前没有工单'));
+            process.exit();
+        }
+
+        files.forEach(itemFileName => {
+            console.log(chalk.yellow(itemFileName));
+        });
+
+        console.log(chalk.green(`共计${files.length}种工单！`));
+    },
+};

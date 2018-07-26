@@ -12,7 +12,6 @@ import newTypeStep2 from '../typeList/newType/newTypeStep2';
 import opFaultStep2 from '../typeList/opFault/opFaultStep2';
 import partOutStep2 from '../typeList/partOut/partOutStep2';
 import vendorSupportStep2 from '../typeList/vendorSupport/vendorSupportStep2';
-import xStep2 from '../typeList/x/xStep2';
 // end 此处信息自动注入
 
 export default {
@@ -24,7 +23,6 @@ export default {
         opFaultStpe2,
         partOutStpe2,
         vendorSupportStpe2,
-        xStpe2,
         // end 此处信息自动注入
     },
     props: {

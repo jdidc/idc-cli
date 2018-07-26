@@ -31,6 +31,14 @@ program
         require('../command/deleteOrder')();
     });
 
+program
+.command('autoImport')
+.description('auto import orders to steps')
+.alias('ii')
+.action(()=> {
+    require('../command/utils').autoWriteImportInfo();
+})
+
 program.parse(process.argv);
 if (!program.args.length) {
     program.help();
