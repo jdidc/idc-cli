@@ -34,7 +34,7 @@ program
 program
 .command('autoImport')
 .description('auto import orders to steps')
-.alias('ii')
+.alias('ai')
 .action(()=> {
     require('../command/utils').autoWriteImportInfo();
 })
