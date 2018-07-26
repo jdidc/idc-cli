@@ -8,15 +8,15 @@ import mixin from './mixin';
 import { mapGetters } from 'vuex';
 
 // start 此处信息自动注入<% typeList.forEach(function(type){ %>
-import <%= type %>Step2 from '../typeList/<%= type %>/<%= type %>Step2';<% }); %>
+import <%= type %>Step5 from '../typeList/<%= type %>/<%= type %>Step5';<% }); %>
 // end 此处信息自动注入
 
 export default {
-    name: 'step3',
+    name: 'step5',
     mixins: [mixin],
     components: {
         // start 此处信息自动注入<% typeList.forEach(function(type){%>
-        <%= type %>Stpe2,<% })%>
+        <%= type %>Step5,<% })%>
         // end 此处信息自动注入
     },
     props: {

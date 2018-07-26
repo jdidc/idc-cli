@@ -8,10 +8,10 @@ import mixin from './mixin';
 import { mapGetters } from 'vuex';
 
 // start 此处信息自动注入
-import newTypeStep2 from '../typeList/newType/newTypeStep2';
-import opFaultStep2 from '../typeList/opFault/opFaultStep2';
-import partOutStep2 from '../typeList/partOut/partOutStep2';
-import vendorSupportStep2 from '../typeList/vendorSupport/vendorSupportStep2';
+import newTypeStep3 from '../typeList/newType/newTypeStep3';
+import opFaultStep3 from '../typeList/opFault/opFaultStep3';
+import partOutStep3 from '../typeList/partOut/partOutStep3';
+import vendorSupportStep3 from '../typeList/vendorSupport/vendorSupportStep3';
 // end 此处信息自动注入
 
 export default {
@@ -19,10 +19,10 @@ export default {
     mixins: [mixin],
     components: {
         // start 此处信息自动注入
-        newTypeStpe2,
-        opFaultStpe2,
-        partOutStpe2,
-        vendorSupportStpe2,
+        newTypeStep3,
+        opFaultStep3,
+        partOutStep3,
+        vendorSupportStep3,
         // end 此处信息自动注入
     },
     props: {

@@ -19,10 +19,10 @@ export default {
     mixins: [mixin],
     components: {
         // start 此处信息自动注入
-        newTypeStpe2,
-        opFaultStpe2,
-        partOutStpe2,
-        vendorSupportStpe2,
+        newTypeStep2,
+        opFaultStep2,
+        partOutStep2,
+        vendorSupportStep2,
         // end 此处信息自动注入
     },
     props: {

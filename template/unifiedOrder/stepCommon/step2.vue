@@ -16,7 +16,7 @@ export default {
     mixins: [mixin],
     components: {
         // start 此处信息自动注入<% typeList.forEach(function(type){%>
-        <%= type %>Stpe2,<% })%>
+        <%= type %>Step2,<% })%>
         // end 此处信息自动注入
     },
     props: {
