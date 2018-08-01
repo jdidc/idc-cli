@@ -7,7 +7,7 @@ import commonStep5 from '../../components/commonStep5';
 export default {
     name: '<%= type %>-step5',
     components:{
-        commonStep5commonStep5
+        commonStep5
     },
     methods: {
         // 步骤4 返回列表返回列表返回列表返回列表
