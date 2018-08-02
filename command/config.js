@@ -7,7 +7,7 @@ const SRC_ORDER_TYPE_LSIT = `${SRC_VIEWS_ORDER}/typeList`;
 
 const TEMPLATE_DIR = path.resolve(__dirname + '/../template');
 const TEMPLATE_ORDER = `${TEMPLATE_DIR}/unifiedOrder`;
-const TEMPLATE_STEP_COMMON_DIR = `${TEMPLATE_ORDER}/StepCommon`;
+const TEMPLATE_STEP_COMMON_DIR = `${TEMPLATE_ORDER}/stepCommon`;
 const TEMPLATE_OP_FAULT = `${TEMPLATE_ORDER}/opFault`;
 
 module.exports = Object.freeze({
