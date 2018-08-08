@@ -43,6 +43,11 @@ export default {
        
     },
     methods: {
+         // 关闭modal
+        post(){
+            console.log('关闭');
+            this.modalShow = false;
+        },
         // 返回第二步
         backStep2() {
             this.$emit('on-prevStep');
