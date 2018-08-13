@@ -57,13 +57,8 @@ unifiedDetail
                 <!-- end 用户信息 -->
 
                 <divider/>
+                
                 <component v-model="subDetailData" :opButton="opButton" @on-regetData="onRegetData" :is="currentView"></component>
-
-                <!-- op故障单详情 -->
-                <!-- <opDetail :opButton="opButton" v-if="objBasicInfo.resource_data === 'op_fault'" v-model="opInfo" @on-regetData="onRegetData"></opDetail> -->
-
-                <!-- 出库工单详情 -->
-                <!-- <part-out-detail :opButton="opButton" @on-regetData="onRegetData" v-if="objBasicInfo.resource_data === 'part_out'" v-model="partOutInfo"></part-out-detail> -->
 
                 <!-- 操作日志 -->
                 <div class="item">
@@ -124,13 +119,14 @@ import descriptionList from './components/descriptionList/descriptionList';
 import description from './components/descriptionList/description';
 import divider from './components/divider/divider';
 
-import opFaultDetail from './typeList/opFault/opFaultDetail';
-import partOutDetail from './typeList/partOut/partOutDetail';
+
+// start 此处信息自动注入
+// end 此处信息自动注入
 
 export default {
     components: {
-        opFaultDetail,
-        partOutDetail,
+        // start 此处信息自动注入
+        // end 此处信息自动注入
         descriptionList,
         description,
         divider,
