@@ -10,23 +10,31 @@ unifiedDetail
 
             <div class="wo-detail-operation">
                 <div class="basic" v-if="objBtns.common && objBtns.common.length">
-                    <Button v-for="(item, idx) in objBtns.common" type="info" :key="idx" @click="commonHandle(item.name)">{{item.title}}</Button>
+                    <operation-button v-for="(item, idx) in objBtns.common" :key="idx" :name="item.title" :opType="item.name" btnType="info" :orderId="$route.params.id" :orderType="objBasicInfo.resource_data" @on-status-changed="onRegetData"></operation-button>
                 </div>
                 <div class="other" v-if="objBtns.detail && objBtns.detail.length" v-for="(item,idx) in objBtns.detail">
-                    <Button @click="commonHandle(item.name)" v-if="item.name=== 'pause'" type="warning">{{item.title}}</Button>
-                    <Button @click="commonHandle(item.name)" v-else-if="item.name=== 'stop'" type="error">{{item.title}}</Button>
-                    <Button @click="commonHandle(item.name)" v-else-if="item.name=== 'recovery'" type="success">{{item.title}}</Button>
-                    <Button @click="commonHandle(item.name)" v-else-if="item.name=== 'reject'" type="info">{{item.title}}</Button>
-                    <Button @click="commonHandle(item.name)" v-else-if="item.name=== 'affirm_perform'" type="info">{{item.title}}</Button>
-                    <Button @click="commonHandle(item.name)" v-else-if="item.name=== 'backtrack'" type="warning">{{item.title}}</Button>
 
-                    <Poptip v-else-if="item.name === 'complete'" :confirm="true" :title="`你确定${item.title}吗`" :key="idx" @on-ok="changeStatus(item.name)">
-                        <Button style="margin-left:10px;" type="info">{{item.title}}</Button>
-                    </Poptip>
+                    <operation-button :name="item.title" :opType="item.name" v-if="item.name=== 'pause'" btnType="warning" :orderId="$route.params.id" :orderType="objBasicInfo.resource_data" @on-status-changed="onRegetData"></operation-button>
+                    <operation-button :name="item.title" :opType="item.name" v-if="item.name=== 'stop'" btnType="error" :orderId="$route.params.id" :orderType="objBasicInfo.resource_data" @on-status-changed="onRegetData"></operation-button>
+                    <operation-button :name="item.title" :opType="item.name" v-if="item.name=== 'recovery'" btnType="success" :orderId="$route.params.id" :orderType="objBasicInfo.resource_data" @on-status-changed="onRegetData"></operation-button>
+                    <operation-button :name="item.title" :opType="item.name" v-if="item.name=== 'reject'" btnType="info" :orderId="$route.params.id" :orderType="objBasicInfo.resource_data" @on-status-changed="onRegetData"></operation-button>
+                    <operation-button :name="item.title" :opType="item.name" v-if="item.name=== 'affirm_perform'" btnType="info" :orderId="$route.params.id" :orderType="objBasicInfo.resource_data" @on-status-changed="onRegetData"></operation-button>
+                    <operation-button :name="item.title" :opType="item.name" v-if="item.name=== 'backtrack'" btnType="warning" :orderId="$route.params.id" :orderType="objBasicInfo.resource_data" @on-status-changed="onRegetData"></operation-button>
+
+                    <operation-button v-else-if="item.name === 'complete'" :confirm="true" :name="item.title" :opType="item.name" btnType="success" :orderId="$route.params.id" :orderType="objBasicInfo.resource_data" @on-status-changed="onRegetData"></operation-button>
+                    <operation-button v-else-if="item.name === 'approve_admin' || item.name === 'approve_direct' || item.name === 'approve_second'" :confirm="true" :name="item.title" :opType="item.name" btnType="success" :orderId="$route.params.id" :orderType="objBasicInfo.resource_data" @on-status-changed="onRegetData"></operation-button>
                 </div>
             </div>
 
-            <div class="wo-detail-basic">
+            <div v-if="detail.steps">
+                <div style="width: 1000px; margin: 0 auto;">
+                    <Steps style="text-align: initial" :current="detail.currentStep">
+                        <Step icon="android-radio-button-on" :title="item" :key="idx" v-for="(item, idx) in detail.steps"></Step>
+                    </Steps>
+                </div>
+            </div>
+
+            <div class="wo-detail-basic" style="margin-top: 40px;">
                 <!-- start 工单概要 -->
                 <description-list title="工单概要">
                     <description term="工单编号">{{objBasicInfo.order_sn}}</description>
@@ -57,7 +65,7 @@ unifiedDetail
                 <!-- end 用户信息 -->
 
                 <divider/>
-                
+
                 <component v-model="subDetailData" :opButton="opButton" @on-regetData="onRegetData" :is="currentView"></component>
 
                 <!-- 操作日志 -->
@@ -69,56 +77,15 @@ unifiedDetail
                 </div>
             </div>
         </Card>
-
-        <!-- 暂停、恢复、终止、驳回 备注信息填写 -->
-        <Modal v-model="bModalRemark" title="备注" @on-ok="submitRemark" :loading="bModalLoading">
-            <Alert v-if="strRemarkType=== 'pause'" type="warning" show-icon>
-                暂停
-                <template slot="desc">
-                    您正在进行暂停操作！
-                </template>
-            </Alert>
-            <Alert v-else-if="strRemarkType=== 'recovery'" type="success" show-icon>
-                恢复
-                <template slot="desc">
-                    您正在进行恢复操作！
-                </template>
-            </Alert>
-            <Alert v-else-if="strRemarkType=== 'stop'" type="error" show-icon>
-                终止
-                <template slot="desc">
-                    您正在进行终止操作！
-                </template>
-            </Alert>
-            <Alert v-else-if="strRemarkType=== 'reject'" type="info" show-icon>
-                驳回
-                <template slot="desc">
-                    您正在进行驳回操作！
-                </template>
-            </Alert>
-            <Alert v-else-if="strRemarkType=== 'backtrack'" type="info" show-icon>
-                退回
-                <template slot="desc">
-                    您正在进行退回操作！
-                </template>
-            </Alert>
-
-            <Alert v-else-if="strRemarkType=== 'remark'" type="success" show-icon>
-                信息交互
-                <template slot="desc">
-                    您正在进行信息交互！
-                </template>
-            </Alert>
-
-            <Input placeholder="请填写备注信息" type="textarea" v-model="strRemark" />
-        </Modal>
     </div>
 </template>
 <script>
-import descriptionList from './components/descriptionList/descriptionList';
-import description from './components/descriptionList/description';
-import divider from './components/divider/divider';
+import { mapGetters, mapMutations } from 'vuex'
 
+import descriptionList from './components/descriptionList/descriptionList'
+import description from './components/descriptionList/description'
+import divider from './components/divider/divider'
+import operationButton from './components/operationButton'
 
 // start 此处信息自动注入
 // end 此处信息自动注入
@@ -130,6 +97,7 @@ export default {
         descriptionList,
         description,
         divider,
+        operationButton,
     },
     data() {
         return {
@@ -195,25 +163,13 @@ export default {
                     key: 'created_at',
                 },
             ],
-            // 暂停、等等的备注信息
-            bModalRemark: false,
-            bModalLoading: true,
-            // 备注信息
-            strRemark: '',
-            strRemarkType: '',
-            // 交接班信息
-            objTransfer: {},
-
-            // SA确认执行modal
-            bAffirmPerformShow: false,
-            bModalAffirmPerformLoading: true,
-            affirmPerformValue: '',
 
             // 子组件的信息
             subDetailData: {},
-        };
+        }
     },
     methods: {
+        ...mapMutations(['setDetailInfo']),
         // 获取工单操作按钮
         getOperationButton() {
             this.$axios
@@ -221,8 +177,8 @@ export default {
                     params: { id: this.$route.params.id },
                 })
                 .then(resp => {
-                    this.objBtns = resp.data.data;
-                });
+                    this.objBtns = resp.data.data
+                })
         },
 
         // 获取工单详情
@@ -232,199 +188,58 @@ export default {
                     params: { id: this.$route.params.id },
                 })
                 .then(resp => {
-                    let data = resp.data.data;
-                    this.objBasicInfo = data.base_info;
+                    let data = resp.data.data
+                    this.objBasicInfo = data.base_info
+                    this.setDetailInfo(data)
 
                     // 此处需要后端保证 resource_data的值和外层对象的key一致，才能正确拿到信息。
-                    this.subDetailData = data[this.objBasicInfo.resource_data];
+                    this.subDetailData = data[this.objBasicInfo.resource_data]
 
-                    this.objOperationLog = data.operation_log;
-                });
-        },
-        /**
-            @name 常规的按钮的处理操作
-            @argument {String buttonName} 点击的按钮名字
-         */
-        commonHandle(buttonName) {
-            if (
-                buttonName === 'remark' ||
-                buttonName === 'pause' ||
-                buttonName === 'stop' ||
-                buttonName === 'reject' ||
-                buttonName === 'recovery' ||
-                buttonName === 'backtrack'
-            ) {
-                this.strRemarkType = buttonName;
-                this.bModalRemark = true;
-            } else if (buttonName === 'affirm_perform') {
-                this.bAffirmPerformShow = true;
-            }
-        },
 
-        // 暂停、终止、恢复、驳回，提交备注信息
-        submitRemark() {
-            if (this.strRemark.trim() === '') {
-                this.bModalLoading = false;
-                this.$Message.warning('备注信息必填');
-                // 防止二次点击时确定按钮时，modal关闭了。
-                setTimeout(() => {
-                    this.bModalLoading = true;
-                }, 100);
-                return;
-            }
-
-            // 自动加前缀
-            let strPre = '';
-            switch (this.strRemarkType) {
-                case 'recovery':
-                    strPre = '恢复：';
-                    break;
-                case 'stop':
-                    strPre = '终止：';
-                    break;
-                case 'pause':
-                    strPre = '暂停：';
-                    break;
-                case 'reject':
-                    strPre = '驳回：';
-                    break;
-            }
-
-            let objData = {
-                id: this.$route.params.id,
-                op_type: 'remark',
-                params: {
-                    base_unified_list: {
-                        content: strPre + this.strRemark,
-                    },
-                },
-            };
-
-            if (this.strRemarkType === 'backtrack') {
-                objData = {
-                    id: this.$route.params.id,
-                    op_type: 'backtrack',
-                    params: {
-                        base_unified_list: {
-                            content: this.strRemark,
-                        },
-                    },
-                };
-            }
-
-            this.$axios.post(`/v1.0/unified/update`, objData).then(resp => {
-                if (resp.status === 200) {
-                    this.bModalRemark = false;
-                    this.strRemark = '';
-                    this.getOrderInfo();
-                    this.getOperationButton();
-                    if (this.strRemarkType === 'backtrack') {
-                        this.$Message.success('退回成功!');
-                    }
-                }
-            });
-        },
-
-        /**
-         * @name 接单，更改状态，重新刷新table
-         * @argument {Object opType} 状态更改的类型
-         */
-        changeStatus(opType) {
-            let objData = {
-                id: this.$route.params.id,
-                op_type: opType,
-                params: {
-                    base_unified_list: {},
-                },
-            };
-
-            // 配件变更单，多传一个参数
-            if (this.objBasicInfo.order_type === 2) {
-                objData.params.saorder = {};
-            }
-
-            this.$axios.post('/v1.0/unified/update', objData).then(resp => {
-                if (resp.status === 200) {
-                    this.getOrderInfo();
-                    this.getOperationButton();
-                    this.$Message.success('状态更新成功!');
-                }
-            });
-        },
-
-        // 确认执行
-        affirmPerform() {
-            if (this.affirmPerformValue === '') {
-                this.$Message.warning('请选择操作！');
-                this.bModalAffirmPerformLoading = false;
-                setTimeout(() => {
-                    this.bModalAffirmPerformLoading = true;
-                }, 10);
-                return;
-            }
-
-            let objData = {
-                id: this.$route.params.id,
-                op_type: 'remark',
-                params: {
-                    base_unified_list: {
-                        content: '确认执行：' + this.affirmPerformValue,
-                    },
-                },
-            };
-
-            this.$axios.post(`/v1.0/unified/update`, objData).then(resp => {
-                if (resp.status === 200) {
-                    this.bModalAffirmPerformLoading = false;
-                    setTimeout(() => {
-                        this.bModalAffirmPerformLoading = true;
-                    }, 10);
-                    this.bAffirmPerformShow = false;
-                    this.changeStatus('affirm_perform');
-                }
-            });
+                    this.objOperationLog = data.operation_log
+                })
         },
 
         // 子组件触发重新获取详情
         onRegetData() {
-            this.getOperationButton();
-            this.getOrderInfo();
+            this.getOperationButton()
+            this.getOrderInfo()
         },
 
         // 下横线转驼峰
         lowHorizontalLineToHump(s) {
-            let a = s.split('_');
-            let o = a[0];
-            for (let i = 1; i < a.length; i++) {
-                o = o + a[i].slice(0, 1).toUpperCase() + a[i].slice(1);
+            if (s) {
+                let a = s.split('_')
+                let o = a[0]
+                for (let i = 1; i < a.length; i++) {
+                    o = o + a[i].slice(0, 1).toUpperCase() + a[i].slice(1)
+                }
+                return o
             }
-            return o;
         },
     },
     computed: {
+        ...mapGetters(['detail']),
         // 控制图标的显示
         orderIcon() {
-            let tlIcon = '';
+            let tlIcon = ''
             switch (this.objBasicInfo.resource_data) {
                 // 巡检
                 case 'inspection':
-                    tlIcon =
-                        '<i style="color: #2d8cf0;" class="fa fa-retweet" aria-hidden="true"></i>';
-                    break;
+                    tlIcon = '<i style="color: #2d8cf0;" class="fa fa-retweet" aria-hidden="true"></i>'
+                    break
 
                 // 设备替换
                 case 'saorder':
-                    tlIcon =
-                        '<i style="color: #2d8cf0;" class="fa fa-puzzle-piece" aria-hidden="true"></i>';
-                    break;
+                    tlIcon = '<i style="color: #2d8cf0;" class="fa fa-puzzle-piece" aria-hidden="true"></i>'
+                    break
 
                 // 交接班
                 case 'transfer':
-                    tlIcon =
-                        '<i style="color: #2d8cf0;" class="fa fa-briefcase" aria-hidden="true"></i>';
-                    break;
+                    tlIcon = '<i style="color: #2d8cf0;" class="fa fa-briefcase" aria-hidden="true"></i>'
+                    break
             }
-            return tlIcon;
+            return tlIcon
         },
 
         /**
@@ -445,21 +260,23 @@ export default {
             }];
          */
         opButton() {
-            return this.objBtns.operation;
+            return this.objBtns.operation
         },
 
         // 根据类型显示组件
         currentView() {
-            return `${this.lowHorizontalLineToHump(
-                this.objBasicInfo.resource_data,
-            )}Detail`;
+            let type = this.lowHorizontalLineToHump(this.objBasicInfo.resource_data)
+
+            if (type) {
+                return `${type}Detail`
+            }
         },
     },
     created() {
-        this.getOperationButton();
-        this.getOrderInfo();
+        this.getOperationButton()
+        this.getOrderInfo()
     },
-};
+}
 </script>
 
 <style lang="less">
@@ -488,4 +305,3 @@ export default {
     }
 }
 </style>
-
