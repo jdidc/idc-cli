@@ -88,7 +88,7 @@ import divider from './components/divider/divider'
 import operationButton from './components/operationButton'
 
 // start 此处信息自动注入<% DeailTypeList.forEach(function(type){ %>
-import <%= type %>Detail from './typeList/<%= type %>/<%= type %>Detail';<% }) %>
+import <%= type %>Detail from './typeList/<%= type %>/<%= type %>Detail'<% }); %>
 // end 此处信息自动注入
 
 export default {
