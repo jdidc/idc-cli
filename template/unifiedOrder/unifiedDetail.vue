@@ -55,8 +55,13 @@ unifiedDetail
                     <description term="所属部门">
                         {{objBasicInfo.creator && objBasicInfo.creator.organization && objBasicInfo.creator.organization.name}}
                     </description>
-                    <description term="当前处理人">
-                        {{ objBasicInfo.operator && objBasicInfo.operator.user_full}}
+                    <description v-if="operationInfo.length !== 0" term="待处理人">
+                        <Tooltip v-if="operationInfo.length>2" :content="operationInfo.join(',')">
+                            {{operationInfoAbbr}}
+                        </Tooltip>
+                        <span v-else>
+                            {{operationInfo.join(',')}}
+                        </span>
                     </description>
                     <description term="抄送">
                         <span class="email" v-for="(item, idx) in objBasicInfo.cc_email" :key="idx">{{item+'&nbsp;&nbsp;&nbsp;&nbsp;'}}</span>
@@ -80,12 +85,12 @@ unifiedDetail
     </div>
 </template>
 <script>
-import { mapGetters, mapMutations } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex';
 
-import descriptionList from './components/descriptionList/descriptionList'
-import description from './components/descriptionList/description'
-import divider from './components/divider/divider'
-import operationButton from './components/operationButton'
+import descriptionList from './components/descriptionList/descriptionList';
+import description from './components/descriptionList/description';
+import divider from './components/divider/divider';
+import operationButton from './components/operationButton';
 
 // start 此处信息自动注入<% DeailTypeList.forEach(function(type){ %>
 import <%= type %>Detail from './typeList/<%= type %>/<%= type %>Detail'<% }); %>
@@ -93,7 +98,7 @@ import <%= type %>Detail from './typeList/<%= type %>/<%= type %>Detail'<% }); %
 
 export default {
     components: {
-        // start 此处信息自动注入<% DeailTypeList.forEach(function(type){%>
+       // start 此处信息自动注入<% DeailTypeList.forEach(function(type){%>
         <%= type %>Detail,<% })%>
         // end 此处信息自动注入
         descriptionList,
@@ -168,7 +173,10 @@ export default {
 
             // 子组件的信息
             subDetailData: {},
-        }
+
+            // 待处理人显示
+            operationInfoAbbr: '',
+        };
     },
     methods: {
         ...mapMutations(['setDetailInfo']),
@@ -178,9 +186,9 @@ export default {
                 .get('/v1.0/worklist/buttons', {
                     params: { id: this.$route.params.id },
                 })
-                .then(resp => {
-                    this.objBtns = resp.data.data
-                })
+                .then((resp) => {
+                    this.objBtns = resp.data.data;
+                });
         },
 
         // 获取工单详情
@@ -189,34 +197,33 @@ export default {
                 .get('/v1.0/worklist/detail', {
                     params: { id: this.$route.params.id },
                 })
-                .then(resp => {
-                    let data = resp.data.data
-                    this.objBasicInfo = data.base_info
-                    this.setDetailInfo(data)
+                .then((resp) => {
+                    let data = resp.data.data;
+                    this.objBasicInfo = data.base_info;
+                    this.setDetailInfo(data);
 
                     // 此处需要后端保证 resource_data的值和外层对象的key一致，才能正确拿到信息。
-                    this.subDetailData = data[this.objBasicInfo.resource_data]
+                    this.subDetailData = data[this.objBasicInfo.resource_data];
 
-
-                    this.objOperationLog = data.operation_log
-                })
+                    this.objOperationLog = data.operation_log;
+                });
         },
 
         // 子组件触发重新获取详情
         onRegetData() {
-            this.getOperationButton()
-            this.getOrderInfo()
+            this.getOperationButton();
+            this.getOrderInfo();
         },
 
         // 下横线转驼峰
         lowHorizontalLineToHump(s) {
             if (s) {
-                let a = s.split('_')
-                let o = a[0]
+                let a = s.split('_');
+                let o = a[0];
                 for (let i = 1; i < a.length; i++) {
-                    o = o + a[i].slice(0, 1).toUpperCase() + a[i].slice(1)
+                    o = o + a[i].slice(0, 1).toUpperCase() + a[i].slice(1);
                 }
-                return o
+                return o;
             }
         },
     },
@@ -224,24 +231,38 @@ export default {
         ...mapGetters(['detail']),
         // 控制图标的显示
         orderIcon() {
-            let tlIcon = ''
+            let tlIcon = '';
             switch (this.objBasicInfo.resource_data) {
                 // 巡检
                 case 'inspection':
-                    tlIcon = '<i style="color: #2d8cf0;" class="fa fa-retweet" aria-hidden="true"></i>'
-                    break
+                    tlIcon = '<i style="color: #2d8cf0;" class="fa fa-retweet" aria-hidden="true"></i>';
+                    break;
 
                 // 设备替换
                 case 'saorder':
-                    tlIcon = '<i style="color: #2d8cf0;" class="fa fa-puzzle-piece" aria-hidden="true"></i>'
-                    break
+                    tlIcon = '<i style="color: #2d8cf0;" class="fa fa-puzzle-piece" aria-hidden="true"></i>';
+                    break;
 
                 // 交接班
                 case 'transfer':
-                    tlIcon = '<i style="color: #2d8cf0;" class="fa fa-briefcase" aria-hidden="true"></i>'
-                    break
+                    tlIcon = '<i style="color: #2d8cf0;" class="fa fa-briefcase" aria-hidden="true"></i>';
+                    break;
             }
-            return tlIcon
+            return tlIcon;
+        },
+
+        operationInfo() {
+            let arr = [];
+            if (this.objBasicInfo.operations_info) {
+                this.objBasicInfo.operations_info.forEach((item) => {
+                    arr.push(item.user_name);
+                });
+            }
+
+            if (arr.length > 2) {
+                this.operationInfoAbbr = `${arr[0]},${arr[1]}...`;
+            }
+            return arr;
         },
 
         /**
@@ -262,23 +283,23 @@ export default {
             }];
          */
         opButton() {
-            return this.objBtns.operation
+            return this.objBtns.operation;
         },
 
         // 根据类型显示组件
         currentView() {
-            let type = this.lowHorizontalLineToHump(this.objBasicInfo.resource_data)
+            let type = this.lowHorizontalLineToHump(this.objBasicInfo.resource_data);
 
             if (type) {
-                return `${type}Detail`
+                return `${type}Detail`;
             }
         },
     },
     created() {
-        this.getOperationButton()
-        this.getOrderInfo()
+        this.getOperationButton();
+        this.getOrderInfo();
     },
-}
+};
 </script>
 
 <style lang="less">
