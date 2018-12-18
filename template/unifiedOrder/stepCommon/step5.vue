@@ -15,9 +15,9 @@ export default {
     name: 'step5',
     mixins: [mixin],
     components: {
-        // start 此处信息自动注入<% typeList.forEach(function(type){%>
-        <%= type %>Step5,<% })%>
-        // end 此处信息自动注入
+      // start 此处信息自动注入<% typeList.forEach(function(type){%>
+      <%= type %>Step5,<% })%>
+      // end 此处信息自动注入
     },
     props: {
         step: Number,
