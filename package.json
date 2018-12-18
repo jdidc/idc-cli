@@ -1,11 +1,11 @@
 {
   "name": "idc-cli",
-  "version": "1.0.25",
+  "version": "1.0.16",
   "description": "cli create directory",
   "main": "index.js",
   "scripts": {
     "//": "这里的no表示 create order",
-    "publish": "npm version patch && npm publish"
+    "publish": "npm version patch"
   },
   "repository": "https://github.com/jdidc/idc-cli",
   "author": "lcf33123@foxmail.com",
