@@ -4,7 +4,8 @@
   "description": "cli create directory",
   "main": "index.js",
   "scripts": {
-    "//": "这里的no表示 create order"
+    "//": "这里的no表示 create order",
+    "publish": "npm version patch && npm publish"
   },
   "repository": "https://github.com/jdidc/idc-cli",
   "author": "lcf33123@foxmail.com",
