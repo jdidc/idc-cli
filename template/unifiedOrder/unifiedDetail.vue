@@ -1,5 +1,3 @@
-unifiedDetail
-
 <template>
   <div class="wo-detail">
     <Card>
@@ -17,12 +15,15 @@ unifiedDetail
           <operation-button :name="item.title" :opType="item.name" v-if="item.name=== 'pause'" btnType="warning" :orderId="$route.params.id" :orderType="objBasicInfo.resource_data" @on-status-changed="onRegetData"></operation-button>
           <operation-button :name="item.title" :opType="item.name" v-if="item.name=== 'stop'" btnType="error" :orderId="$route.params.id" :orderType="objBasicInfo.resource_data" @on-status-changed="onRegetData"></operation-button>
           <operation-button :name="item.title" :opType="item.name" v-if="item.name=== 'recovery'" btnType="success" :orderId="$route.params.id" :orderType="objBasicInfo.resource_data" @on-status-changed="onRegetData"></operation-button>
-          <operation-button :name="item.title" :opType="item.name" v-if="item.name=== 'reject'" btnType="info" :orderId="$route.params.id" :orderType="objBasicInfo.resource_data" @on-status-changed="onRegetData"></operation-button>
+          <operation-button :name="item.title" :opType="item.name" v-if="item.name=== 'reject' || item.name=== 'support_leader_approve_reject'" btnType="info" :orderId="$route.params.id" :orderType="objBasicInfo.resource_data" @on-status-changed="onRegetData"></operation-button>
           <operation-button :name="item.title" :opType="item.name" v-if="item.name=== 'affirm_perform'" btnType="info" :orderId="$route.params.id" :orderType="objBasicInfo.resource_data" @on-status-changed="onRegetData"></operation-button>
           <operation-button :name="item.title" :opType="item.name" v-if="item.name=== 'backtrack'" btnType="warning" :orderId="$route.params.id" :orderType="objBasicInfo.resource_data" @on-status-changed="onRegetData"></operation-button>
 
           <operation-button v-else-if="item.name === 'complete'" :confirm="true" :name="item.title" :opType="item.name" btnType="success" :orderId="$route.params.id" :orderType="objBasicInfo.resource_data" @on-status-changed="onRegetData"></operation-button>
-          <operation-button v-else-if="item.name === 'approve_admin' || item.name === 'approve_direct' || item.name === 'approve_second'" :confirm="true" :name="item.title" :opType="item.name" btnType="success" :orderId="$route.params.id" :orderType="objBasicInfo.resource_data" @on-status-changed="onRegetData"></operation-button>
+          <operation-button v-else-if="item.name === 'bmc_cancel'" :confirm="true" :name="item.title" :opType="item.name" btnType="error" :orderId="$route.params.id" :orderType="objBasicInfo.resource_data" @on-status-changed="onRegetData"></operation-button>
+          <operation-button v-else-if="item.name === 'approve_admin' || item.name === 'approve_direct' || item.name === 'approve_second' || item.name === 'approve_direct_new' || item.name=== 'support_op_approve_pass' ||  item.name=== 'support_leader_approve_pass' ||  item.name=== 'support_op_cancel'"  :confirm="true" :name="item.title" :opType="item.name" btnType="success" :orderId="$route.params.id" :orderType="objBasicInfo.resource_data" @on-status-changed="onRegetData"></operation-button>
+
+          <operation-button :name="item.title" :opType="item.name" v-if="item.name=== 'support_op_approve_reject'" btnType="info" :orderId="$route.params.id" :orderType="objBasicInfo.resource_data" :orderTypeId="objBasicInfo.order_type" :tableColumnData="subDetailData" @on-status-changed="onRegetData"></operation-button>
         </div>
       </div>
 
