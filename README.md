@@ -13,7 +13,7 @@
 
 
 
-## install
+## install
 
 ``` cnpm i idc-cli -g ```
 或者
