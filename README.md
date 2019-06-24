@@ -8,7 +8,7 @@
 
 2. [x] 新工单的步骤可以选择，现支持4/5，默认为5步。
 
-3. [x] git hooks，push时，自动发布到npm.js
+3. [x] git hooks，push时，自动发布到npm.js
 
 
 
@@ -21,7 +21,7 @@
 
 ---
 
-输入``` idc ```会显示下面的内容， 说明安装成功。
+输入``` idc ```会显示下面的内容， 说明安装成功。
 
 ```YML
 Usage: idc [options] [command]
@@ -40,17 +40,17 @@ Usage: idc [options] [command]
 ```
 
 - ```idc ao```或者```idc addOrder```，
-根据提示输驼峰形式的工单类型即可创建成功，import信息会自动写入 stepCommon中。*注意，重复的工单不能创建成功，也不会覆盖之前的工单！*
+根据提示输驼峰形式的工单类型即可创建成功，import信息会自动写入 stepCommon中。*注意，重复的工单不能创建成功，也不会覆盖之前的工单！*
 
 - ```idc lo```或者```idc listOrder```，
 会列出现有的工单。
 
 - ```idc do```或者```idc deleteOrder```，
-删除某种工单，根据提示信息输入工单类型的key和确认的```yes```，即可删除。删除需要谨慎操作。
-*如果不慎将以写好的工单删除，可以通过```git checkout dir```的方式找回*
+删除某种工单，根据提示信息输入工单类型的key和确认的```yes```，即可删除。删除需要谨慎操作。
+*如果不慎将以写好的工单删除，可以通过```git checkout dir```的方式找回*
 
 - ```idc ai```或者```idc autoImport```，
-根据提示输驼峰形式的工单类型即可创建成功，import信息会自动写入 stepCommon中。
+根据提示输驼峰形式的工单类型即可创建成功，import信息会自动写入 stepCommon中。
 
 ## update
 
