@@ -45,13 +45,14 @@ module.exports = {
             fse.outputFileSync(destFile, html)
         }
 
-        const src = `${TEMPLATE_ORDER}/unifiedDetail.vue`
-        const dest = `${SRC_VIEWS_ORDER}/unifiedDetail.vue`
-        const content1 = fse.readFileSync(src).toString()
-        const html1 = ejs.render(content1, {
-            DeailTypeList: DeailTypeList,
-        })
-        fse.outputFileSync(dest, html1)
+        // 详情页引用已经外置，且新版工单用的是通用详情页，是同一个模板。
+        // const src = `${TEMPLATE_ORDER}/unifiedDetail.vue`
+        // const dest = `${SRC_VIEWS_ORDER}/unifiedDetail.vue`
+        // const content1 = fse.readFileSync(src).toString()
+        // const html1 = ejs.render(content1, {
+        //     DeailTypeList: DeailTypeList,
+        // })
+        // fse.outputFileSync(dest, html1)
 
         console.log(chalk.green(`注入完成！\n`))
     },
