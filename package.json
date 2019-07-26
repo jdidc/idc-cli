@@ -1,6 +1,6 @@
 {
   "name": "idc-cli",
-  "version": "1.0.33",
+  "version": "1.0.34",
   "description": "cli create directory",
   "main": "index.js",
   "scripts": {
