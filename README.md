@@ -11,8 +11,6 @@
 3. [x] git hooks，push时，自动发布到npm.js
 
 
-
-
 ## install
 
 ``` cnpm i idc-cli -g ```
@@ -64,3 +62,34 @@ npm uninstall -g idc-cli
 // 安装
 npm i idc-cli -g
 ```
+
+
+## idc-cli开发调试模式
+
+在项目根目录，这样执行即可：```./bin/idc.js lo```，其他命令参考上文的使用
+
+## 主要逻辑
+
+举例来说，我们创建名字为```bigDone```的工单类型
+
+1. 默认会修改以下文件
+```js
+src/views/unifiedOrder/stepCommon/step2.vue
+src/views/unifiedOrder/stepCommon/step3.vue
+src/views/unifiedOrder/stepCommon/step4.vue
+src/views/unifiedOrder/stepCommon/step5.vue
+```
+这里的修改很简单，就是注册了子组件
+
+2. 会创建以下文件
+```js
+src/views/unifiedOrder/typeList/bigDone/bigDoneStep2.vue
+src/views/unifiedOrder/typeList/bigDone/bigDoneStep3.vue
+src/views/unifiedOrder/typeList/bigDone/bigDoneStep4.vue
+src/views/unifiedOrder/typeList/bigDone/bigDoneStep5.vue
+src/views/unifiedOrder/typeList/bigDone/bigDoneMixins.js
+src/views/unifiedOrder/typeList/bigDone/bigDoneDetail.js
+```
+
+3. 对于新版的工单也许你会用不到 ```src/views/unifiedOrder/typeList/bigDone/bigDoneDetail.js```，
+如果用不到删除即可。
